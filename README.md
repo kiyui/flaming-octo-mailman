@@ -3,7 +3,7 @@ flaming-octo-mailman
 Send data to a POST URL and get the output. Easy for use with scripts, and supports many options.
 
 ```
-usage: main.py [-h] -u URL -f FILE [-s] [-n] [-v]
+usage: main.py [-h] -u URL -f FILE [-s] [-r] [-n] [-x] [-v]
 
 Sends formatted POST data from a file to a URL
 
@@ -12,7 +12,9 @@ optional arguments:
   -u URL, --url URL     URL to POST data
   -f FILE, --file FILE  POST file directory (JSON)
   -s, --save            Save POST output
+  -r, --noredirect      Disable redirects
   -n, --noretry         Do not retry on failure
+  -x, --silent          Do not print page
   -v, --verbose         Verbose logging
 ```
 

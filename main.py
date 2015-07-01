@@ -21,8 +21,10 @@ def main(args):
     arg_url = args.url
     arg_file = args.file
     arg_save = args.save
+    arg_noredirect = args.noredirect
     arg_success = args.noretry
     arg_verbose = args.verbose
+    arg_silent = args.silent
  
     # Create POST data
     try:
@@ -47,7 +49,19 @@ def main(args):
     while not success:
         try:
             # Access URL
-            #openURL = urlopen(arg_url)
+            if arg_verbose:
+                print('Attempting to connect')
+            openURL = urlopen(arg_url)
+                
+            # Check if redirect occured
+            if openURL.geturl() != arg_url:
+                # Verbose logging
+                if arg_verbose:
+                    print('A redirect occured')
+                if arg_noredirect:
+                    if arg_verbose:
+                        print('Not allowing redirect.')
+                    continue
 
             # End loop cycle
             success = True
@@ -73,7 +87,8 @@ def main(args):
                 # Print output
                 readURL = openURL.read()
                 readURL = readURL.decode('utf-8')
-                print(readURL)
+                if not arg_silent:
+                    print(readURL)
 
                 # Save data
                 if arg_save:
@@ -81,6 +96,9 @@ def main(args):
                         returnData.write(readURL)
                         returnData.close()
 
+        except KeyboardInterrupt:
+            print('Quit')
+            return 1
         except:
             # Verbose logging
             if arg_verbose:
@@ -100,7 +118,9 @@ if __name__ == '__main__':
     parser.add_argument('-u', '--url', help='URL to POST data', required=True)
     parser.add_argument('-f', '--file', help='POST file directory (JSON)', required=True)
     parser.add_argument('-s', '--save', help='Save POST output', action='store_true')
+    parser.add_argument('-r', '--noredirect', help='Disable redirects', action='store_true')
     parser.add_argument('-n', '--noretry', help='Do not retry on failure', action='store_true')
+    parser.add_argument('-x', '--silent', help='Do not print page', action='store_true')
     parser.add_argument('-v', '--verbose', help='Verbose logging', action='store_true')
     args = parser.parse_args()
 
